@@ -5,6 +5,7 @@
 *-Ex.R
 
 
-# Ignore results directories
-results/
+# Ignore simulation directories
+betabinsim/
+negbinsim/
 .Rproj.user
