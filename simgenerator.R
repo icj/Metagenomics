@@ -78,13 +78,13 @@ for(m in 1:length(sim.ids)){
     )
 }
 
-# ##====Run Simulations====
-# v <- 1
-# for(v in 1:length(sim.ids)){
-#     system(paste(paste("cd", paste("~/Metagenomics/betabinsim/", sim.ids[v], sep = ""), sep = " "),
-#                  paste("qsub", paste(sim.ids[v], "csh", sep = "."), sep = " "), sep = " ; ")
-#     )
-# }
+##====Run Simulations====
+v <- 1
+for(v in 1:length(sim.ids)){
+    system(paste(paste("cd", paste("~/Metagenomics/betabinsim/", sim.ids[v], sep = ""), sep = " "),
+                 paste("qsub", paste(sim.ids[v], "csh", sep = "."), sep = " "), sep = " ; ")
+    )
+}
 
 rm(list = ls()) # cleanup
 
@@ -157,10 +157,10 @@ for(m in 1:length(sim.ids)){
     )
 }
 
-# ##====Run Simulations====
-# for(v in 1:length(sim.ids)){
-#     system(paste(paste("cd", paste("~/Metagenomics/negbinsim/", sim.ids[v], sep = ""), sep = " "),
-#                  paste("qsub", paste(sim.ids[v], "csh", sep = "."), sep = " "), sep = " ; ")
-#     )
-# }
+##====Run Simulations====
+for(v in 1:length(sim.ids)){
+    system(paste(paste("cd", paste("~/Metagenomics/negbinsim/", sim.ids[v], sep = ""), sep = " "),
+                 paste("qsub", paste(sim.ids[v], "csh", sep = "."), sep = " "), sep = " ; ")
+    )
+}
 
