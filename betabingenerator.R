@@ -1,6 +1,7 @@
 ## Move from git directory to simulation working directory on HPC
 
 system("cd ~/my_research/Metagenomics/")
+system("mkdir ~/Metagenomics/")
 system("mkdir ~/Metagenomics/betabinsim/")
 system("cp betabinsim.R ~/Metagenomics/betabinsim/")
 system("cp metastats.R ~/Metagenomics/")
