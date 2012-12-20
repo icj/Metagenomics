@@ -7,7 +7,7 @@ for(h in 1:length(sim.ids)) system(paste("mkdir ~/Metagenomics/negbinsim/", sim.
 ##----Simulation Settings Files----
 n <- c(5, 10, 25)
 mu <- c(.2, .1, .05, .01)
-a <- c(1.5, 2, 4)
+a <- c(4, 2, 1.5)
 l <- 0
 for(i in n){
     for(j in mu){
