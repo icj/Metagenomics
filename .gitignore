@@ -7,3 +7,4 @@
 
 # Ignore results directories
 results/
+.Rproj.user
