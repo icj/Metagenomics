@@ -1,0 +1,211 @@
+%%====Preamble====
+\documentclass[12pt]{article}
+
+%%----Common Packages----
+\usepackage{amsmath,amsfonts,amssymb}
+\usepackage{graphicx}
+\usepackage{verbatim}
+\usepackage{float}
+\usepackage{hyperref}
+\usepackage{pdflscape}           % \begin{landscape} ... \end{landscape}
+
+%%----Page Setup----
+\usepackage[top=.75in,left=.75in,right=.75in,bottom=.75in]{geometry}
+\geometry{letterpaper}           % ... or a4paper or a5paper or ...
+\geometry{landscape}            % For ALL landscape pages
+%\usepackage[parfill]{parskip}   % Begin paragraph w/ empty line (instead of indent)
+
+%%----KnitR Global Options----
+<<knitrGlobal, eval=TRUE, include=FALSE>>=
+opts_chunk$set(echo=FALSE, results='hide', message=FALSE)
+opts_knit$set(concordance=TRUE)
+@
+
+%%----Required R Scripts/data files----
+% list files here
+
+%%----R Preamble----
+<<R.Preamble, eval=TRUE>>=
+require(xtable)
+require(Hmisc)
+require(ggplot2)
+@
+                                   
+%%----Title----
+\title{TITLE}
+\author{Isaac Jenkins \\ {\tt <icj@email.arizona.edu>}}
+%\date{}                         % Activate to display a given date or no date
+
+
+%%----Start Document----
+\begin{document}
+%\maketitle
+
+<<panelPlots, eval=TRUE, fig.align='center', fig.width=12, fig.height=7>>=
+##====Panel Plots====
+require(RColorBrewer)
+
+load("~/Dropbox/Metagenomics/bbResults.RData")
+load("~/Dropbox/Metagenomics/nbResults.RData")
+
+## Function to creater TP, FP, ... data for panel plots
+# x is p-value matrix
+# alpha is type I error cutoff
+# sims is number of iterations in simulations
+tpfp <- function(x, alpha = 0.05, sims = 1000){
+    equal   <- x[1:(sims/2)]
+    equal   <- equal[!is.na(equal)]
+    unequal <- x[(sims/2 + 1):sims]
+    unequal <- unequal[!is.na(unequal)] 
+    FP  <- sum(equal < alpha)
+    TN  <- sum(equal >= alpha)
+    TP  <- sum(unequal < alpha)
+    FN  <- sum(unequal >= alpha)
+    TPR <- TP/(TP + FN)
+    FPR <- FP/(FP + TN)
+    TNR <- 1 - FPR
+    Accuracy <- (TP + TN)/(sims)
+    PPV <- TP/(TP + FP)
+    NPV <- TN/(TN + FN)
+    FDR <- FP/(FP + TP)
+    Cor <- sum(TN, TP)
+    Inc <- sum(FP, FN)
+    return(data.frame(TP, TN, FN, FP, Cor, Inc, TPR, TNR, FPR, Accuracy, PPV, NPV, FDR))
+}
+
+## Function to generate panel plot
+# sim.ids are the ids for the 12 simulations needed in each plot
+# n is the per group sample size in the simulation
+# content is the type of plot desired (e.g, TPR, FPR)
+# Main is the main title for the plot
+plot.panel <- function(sim.ids, n, content, Main){
+    # colors for plots
+    colors <- brewer.pal(9, "Set1")
+    colors <- colors[-c(6,7)]
+    colors <- c(colors, "black")
+    par(mar=c(5.1, 4.1, 4.1, 9.1), xpd = TRUE) ## increase right margin for legend
+    for(i in 1:length(sim.ids)){
+        res <- get(paste(sim.ids[i], "pvalues", sep = "."))[, -c(5, 8)]
+        aa <- apply(res, 2, tpfp, alpha = 0.05, sims = 1000)
+        y <- unlist(sapply(aa, function(x) x[content]))
+        if(i == 1){
+            plot(x    = rep(1, length(y)), y = y, xlim = c(1, 12), ylim = c(0, 1),
+                 col  = colors, pch = 1:length(y), xaxt = "n",
+                 xlab = paste("Simulation Settings, n = ", n, sep = ""), ylab = content , 
+                 main = Main
+            )
+        }
+        else{
+            points(x = rep(i, length(y)), y = y, col = colors, pch = 1:length(y))
+        }
+    }
+    #abline(v = c(3.5, 6.6, 9.5), lty = 2)
+    #abline(h = .06, lty = 2)
+    #par(xpd = TRUE)
+    segments(x0 = c(3.5, 6.6, 9.5), y0 = rep(-.12, 3), x1 = c(3.5, 6.6, 9.5), y1 = rep(1.04, 3), lty = 2)
+    text(x = c(2, 5, 8, 11), y = -.07, expression(mu[1] == 0.2, mu[1] ==0.1, mu[1] == 0.05, mu[1] == 0.01))
+    text(x = 1:12, y = -.1, paste("a = " , rep(c(4, 2, 1.5), 3), sep = ""))
+    
+    legend("right", inset = c(-.18, 0),
+           legend = c("t-test", "Metastats", "Poisson", "NegBin", "BetaBin(Var)",
+                      "BetaBin(Fix)", "BetaReg(Var)", "Betareg(Fix)"),
+           col = colors , pch = 1:8, bty = "n", cex = 1.25)
+    par(mar=c(5.1, 4.1, 4.1, 2.1), xpd = FALSE) # reset margins to default
+}
+
+
+##----Plots----
+## TPR
+Main <- expression(list("Sensitivity or True Positive Rate", frac(TP,TP+FN)))
+content <- "TPR"
+# n = 5
+n <- 5
+sim.ids <- paste("betabin", c(3:1, 6:4, 9:7, 12:10), sep = "")
+plot.panel(sim.ids, n, content, Main)
+#n = 10
+n <- 10
+sim.ids <- paste("betabin", c(15:13, 18:16, 21:19, 24:22), sep = "")
+plot.panel(sim.ids, n, content, Main)
+#n = 25
+n <- 25
+sim.ids <- paste("betabin", c(27:25, 30:28, 33:31, 36:34), sep = "")
+plot.panel(sim.ids, n, content, Main)
+
+## FPR
+Main <- expression(list("False Positive Rate", frac(FP,FP+TN)))
+content <- "FPR"
+# n = 5
+n <- 5
+sim.ids <- paste("betabin", c(3:1, 6:4, 9:7, 12:10), sep = "")
+plot.panel(sim.ids, n, content, Main)
+#n = 10
+n <- 10
+sim.ids <- paste("betabin", c(15:13, 18:16, 21:19, 24:22), sep = "")
+plot.panel(sim.ids, n, content, Main)
+#n = 25
+n <- 25
+sim.ids <- paste("betabin", c(27:25, 30:28, 33:31, 36:34), sep = "")
+plot.panel(sim.ids, n, content, Main)
+
+## TNR
+Main <- expression(list("Specificity or True Negative Rate", frac(TN,FP+TN)))
+content <- "TNR"
+# n = 5
+n <- 5
+sim.ids <- paste("betabin", c(3:1, 6:4, 9:7, 12:10), sep = "")
+plot.panel(sim.ids, n, content, Main)
+#n = 10
+n <- 10
+sim.ids <- paste("betabin", c(15:13, 18:16, 21:19, 24:22), sep = "")
+plot.panel(sim.ids, n, content, Main)
+#n = 25
+n <- 25
+sim.ids <- paste("betabin", c(27:25, 30:28, 33:31, 36:34), sep = "")
+plot.panel(sim.ids, n, content, Main)
+
+## Accuracy
+Main <- expression(list("Accuracy", frac(TP+TN,P+N)))
+content <- "Accuracy"
+# n = 5
+n <- 5
+sim.ids <- paste("betabin", c(3:1, 6:4, 9:7, 12:10), sep = "")
+plot.panel(sim.ids, n, content, Main)
+#n = 10
+n <- 10
+sim.ids <- paste("betabin", c(15:13, 18:16, 21:19, 24:22), sep = "")
+plot.panel(sim.ids, n, content, Main)
+#n = 25
+n <- 25
+sim.ids <- paste("betabin", c(27:25, 30:28, 33:31, 36:34), sep = "")
+plot.panel(sim.ids, n, content, Main)
+
+@
+
+\end{document}
+
+
+
+
+
+
+
+%%====Generic Templates====
+
+%%----Figure Template----
+% \begin{figure}[H]
+%   \begin{center}
+% <<figureName>>=
+% print(plot(...))
+% @
+%     \caption{figure caption}
+%   \end{center}
+% \end{figure}
+
+%%----Table Template----
+% <<tableName, eval=TRUE, results='asis'>>=
+% print(xtable(x,
+%              digit=c(0),
+%              caption="Caption",
+%              label="tab:tableName"),
+%       table.placement="H",include.rownames=TRUE, caption.placement="top")
+% @

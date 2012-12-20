@@ -1,0 +1,151 @@
+%%====Preamble====
+\documentclass[12pt]{article}
+
+%%----Common Packages----
+\usepackage{amsmath,amsfonts,amssymb}
+\usepackage{graphicx}
+\usepackage{verbatim}
+\usepackage{float}
+\usepackage{hyperref}
+\usepackage{pdflscape}           % \begin{landscape} ... \end{landscape}
+
+%%----Page Setup----
+\usepackage[top=.75in,left=.75in,right=.75in,bottom=.75in]{geometry}
+\geometry{letterpaper}           % ... or a4paper or a5paper or ...
+\geometry{landscape}            % For ALL landscape pages
+%\usepackage[parfill]{parskip}   % Begin paragraph w/ empty line (instead of indent)
+
+%%----KnitR Global Options----
+<<knitrGlobal, eval=TRUE, include=FALSE>>=
+opts_chunk$set(echo=FALSE, results='hide', message=FALSE)
+opts_knit$set(concordance=TRUE)
+@
+
+%%----Required R Scripts/data files----
+% list files here
+
+%%----R Preamble----
+<<R.Preamble, eval=TRUE>>=
+require(xtable)
+require(Hmisc)
+require(ggplot2)
+@
+                                   
+%%----Title----
+\title{TITLE}
+\author{Isaac Jenkins \\ {\tt <icj@email.arizona.edu>}}
+%\date{}                         % Activate to display a given date or no date
+
+
+%%----Start Document----
+\begin{document}
+%\maketitle
+
+<<rocs, eval=TRUE, fig.align='center', fig.height=6>>=
+##====Plot ROC Curves for betabin and negbin results====
+
+require(ROCR)
+require(RColorBrewer)
+
+##----ROC plotting function----
+# pvals = vector of p-values from a single method
+# sims  = number of iterations in simulation
+# maxX  = max for x-axis 
+# Main  = main plot title           
+# add   = logical for adding multiple ROCs
+# color = color for curve
+# line  = line width
+
+plot.roc <- function(pvals, sims, maxX = .1, Main = NULL, add = FALSE, color = 1, line = 1){
+    pred <- prediction(pvals, c(rep(1, sims/2), rep(0, sims/2)))
+    perf <- performance(pred, "tpr", "fpr" )
+    plot(perf,
+         xlim = c(0, maxX),
+         main = Main,
+         col  = color,
+         lwd  = line,
+         add  = add
+         )
+}
+
+load("~/Dropbox/Metagenomics/bbResults.RData")
+load("~/Dropbox/Metagenomics/nbResults.RData")
+
+colors  <- brewer.pal(9, "Set1")
+colors <- colors[-c(6,7)]
+colors <- c(colors, "black")
+sim.ids <- paste("betabin", 1:36, sep = "")
+par(mar=c(5.1, 4.1, 4.1, 9.1)) ## increase right margin for legend
+for(h in sim.ids){
+    ## get pvalues and simulation details
+    pvalues <- get(paste(h, "pvalues", sep = "."))[, -c(5, 8)]
+    details <- get(paste("results", h, sep = "."))
+    details <- details$details
+    ## plot initial ROC curve (p.tt)
+    plot.roc(pvals = pvalues[, 1], sims = 1000, maxX = .1, line = 3,
+             Main = bquote(expression(list(mu[1] == .(details$mu), a == .(details$a), n == .(details$n)))),
+             add = FALSE, color = colors[1]
+    )
+    ## plot remaining ROC curves
+    for(i in 2:ncol(pvalues)){
+        plot.roc(pvals = pvalues[, i], sims = 1000, maxX = .1, add = TRUE, color = colors[i], line = 3)
+    }
+    ## make legend
+    legend("right", inset = c(-.4, 0),lty = 1, cex = 1, bty = "n", col = colors, lwd = 3, xpd = TRUE,
+           legend = c("t-test", "Metastats", "Poisson", "NegBin", "BetaBin(Var)",
+                      "BetaBin(Fix)", "BetaReg(Var)", "Betareg(Fix)")
+           )
+}
+
+sim.ids <- paste("negbin", 1:36, sep = "")
+for(h in sim.ids){
+    ## get pvalues and simulation details
+    pvalues <- get(paste(h, "pvalues", sep = "."))[, -c(5, 8)]
+    details <- get(paste("results", h, sep = "."))
+    details <- details$details
+    ## plot initial ROC curve (p.tt)
+    plot.roc(pvals = pvalues[, 1], sims = 1000, maxX = .1, line = 3,
+             Main = bquote(expression(list(mu[1] == .(details$mu), a == .(details$a), n == .(details$n)))),
+             add = FALSE, color = colors[1]
+    )
+    ## plot remaining ROC curves
+    for(i in 2:ncol(pvalues)){
+        plot.roc(pvals = pvalues[, i], sims = 1000, maxX = .1, add = TRUE, color = colors[i], line = 3)
+    }
+    ## make legend
+    legend("right", inset = c(-.4, 0), lty = 1, cex = 1, bty = "n", col = colors, lwd = 3, xpd = TRUE,
+           legend = c("t-test", "Metastats", "Poisson", "NegBin", "BetaBin(Var)",
+                      "BetaBin(Fix)", "BetaReg(Var)", "Betareg(Fix)")          
+    )
+}
+par(mar=c(5.1, 4.1, 4.1, 2.1)) # reset margins to default
+@
+
+\end{document}
+
+
+
+
+
+
+
+%%====Generic Templates====
+
+%%----Figure Template----
+% \begin{figure}[H]
+%   \begin{center}
+% <<figureName>>=
+% print(plot(...))
+% @
+%     \caption{figure caption}
+%   \end{center}
+% \end{figure}
+
+%%----Table Template----
+% <<tableName, eval=TRUE, results='asis'>>=
+% print(xtable(x,
+%              digit=c(0),
+%              caption="Caption",
+%              label="tab:tableName"),
+%       table.placement="H",include.rownames=TRUE, caption.placement="top")
+% @
