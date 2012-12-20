@@ -4,7 +4,7 @@
 getwd()
 ls() 
 ##----Global parameter settings----
-sims     <- 1000
+sims     <- 10000
 depthMin <- 5000
 depthMax <- 10000
 
