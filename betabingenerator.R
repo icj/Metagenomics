@@ -1,3 +1,11 @@
+## Move from git directory to simulation working directory on HPC
+
+system("cd ~/my_research/Metagenomics/")
+system("mkdir ~/Metagenomics/betabinsim/")
+system("cp betabinsim.R ~/Metagenomics/betabinsim/")
+system("cp metastats.R ~/Metagenomics/")
+
+
 sim.ids <- paste("betabin", 1:36, sep = "")
 
 ##----Create Directories----
@@ -66,10 +74,10 @@ for(m in 1:length(sim.ids)){
     )
 }
 
-##====Run Simulations====
-v <- 1
-for(v in 1:length(sim.ids)){
-    system(paste(paste("cd", paste("~/Metagenomics/betabinsim/", sim.ids[v], sep = ""), sep = " "),
-                 paste("qsub", paste(sim.ids[v], "csh", sep = "."), sep = " "), sep = " ; ")
-    )
-}
+# ##====Run Simulations====
+# v <- 1
+# for(v in 1:length(sim.ids)){
+#     system(paste(paste("cd", paste("~/Metagenomics/betabinsim/", sim.ids[v], sep = ""), sep = " "),
+#                  paste("qsub", paste(sim.ids[v], "csh", sep = "."), sep = " "), sep = " ; ")
+#     )
+# }
