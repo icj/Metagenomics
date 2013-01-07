@@ -1,4 +1,5 @@
 ##====Gather Results====
+## make result directories in git repository
 system("mkdir ~/my_research/Metagenomics/betabinsim/")
 system("mkdir ~/my_research/Metagenomics/negbinsim/")
 
@@ -6,7 +7,7 @@ system("mkdir ~/my_research/Metagenomics/negbinsim/")
 system("scp -r icj@login.hpc.arizona.edu:~icj/Metagenomics/betabinsim/\"*\" ~/my_research/Metagenomics/betabinsim/")
 system("scp -r icj@login.hpc.arizona.edu:~icj/Metagenomics/negbinsim/\"*\" ~/my_research/Metagenomics/negbinsim/")
 
-## Load RData files from Dropbox
+## Load RData files
 rm(list = ls())
 bb.sim.ids <- paste("betabin", 1:36, sep = "")
 for(w in 1:length(bb.sim.ids)){
@@ -33,6 +34,6 @@ for(w in 1:length(nb.sim.ids)){
 
 rm(list = c("aa", "w"))
 
-## Save workspace containing all BetaBinomial results
+## Save workspace containing all results
 save.image("~/my_research/Metagenomics/bbResults.RData")
 
