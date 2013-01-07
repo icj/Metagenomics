@@ -46,7 +46,7 @@ results.nb <- list(
     
 )
 
-set.seed(2001)
+set.seed(2014)
 for(i in 1:sims){
     ## Sampling depth of each subject
     depth1 <- runifdisc(n, depthMin, depthMax) # group 1 depths
