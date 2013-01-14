@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-2.4-1.40.13 (TeX Live 2012) (format=pdflatex 2012.6.30)  18 DEC 2012 12:18
+This is pdfTeX, Version 3.1415926-2.4-1.40.13 (TeX Live 2012) (format=pdflatex 2012.6.30)  14 JAN 2013 14:55
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -978,7 +978,7 @@ Here is how much of TeX's memory you used:
  29i,6n,23p,233b,445s stack positions out of 5000i,500n,10000p,200000b,50000s
 </usr/local/texlive/2012/texmf-dist/fonts/type1/public/amsfonts/cm/cmr12.pfb>
 
-Output written on rocplots.pdf (72 pages, 761980 bytes).
+Output written on rocplots.pdf (72 pages, 6097732 bytes).
 PDF statistics:
  841 PDF objects out of 1000 (max. 8388607)
  615 compressed objects within 7 object streams

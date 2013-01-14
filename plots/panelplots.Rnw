@@ -45,8 +45,7 @@ require(ggplot2)
 ##====Panel Plots====
 require(RColorBrewer)
 
-load("~/Dropbox/Metagenomics/bbResults.RData")
-load("~/Dropbox/Metagenomics/nbResults.RData")
+load("~/my_research/Metagenomics/results/mgResults.RData")
 
 ## Function to creater TP, FP, ... data for panel plots
 # x is p-value matrix

@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-2.4-1.40.13 (TeX Live 2012) (format=pdflatex 2012.6.30)  20 DEC 2012 09:55
+This is pdfTeX, Version 3.1415926-2.4-1.40.13 (TeX Live 2012) (format=pdflatex 2012.6.30)  14 JAN 2013 14:56
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -598,7 +598,7 @@ Here is how much of TeX's memory you used:
  29i,6n,23p,235b,445s stack positions out of 5000i,500n,10000p,200000b,50000s
 </usr/local/texlive/2012/texmf-dist/fonts/type1/public/amsfonts/cm/cmr12.pfb>
 
-Output written on panelplots.pdf (12 pages, 97158 bytes).
+Output written on panelplots.pdf (12 pages, 95504 bytes).
 PDF statistics:
  151 PDF objects out of 1000 (max. 8388607)
  110 compressed objects within 2 object streams

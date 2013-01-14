@@ -68,8 +68,7 @@ plot.roc <- function(pvals, sims, maxX = .1, Main = NULL, add = FALSE, color = 1
          )
 }
 
-load("~/Dropbox/Metagenomics/bbResults.RData")
-load("~/Dropbox/Metagenomics/nbResults.RData")
+load("~/my_research/Metagenomics/results/mgResults.RData")
 
 colors  <- brewer.pal(9, "Set1")
 colors <- colors[-c(6,7)]
@@ -82,13 +81,13 @@ for(h in sim.ids){
     details <- get(paste("results", h, sep = "."))
     details <- details$details
     ## plot initial ROC curve (p.tt)
-    plot.roc(pvals = pvalues[, 1], sims = 1000, maxX = .1, line = 3,
-             Main = bquote(expression(list(mu[1] == .(details$mu), a == .(details$a), n == .(details$n)))),
+    plot.roc(pvals = pvalues[, 1], sims = 10000, maxX = .1, line = 3,
+             Main = bquote(expression(list(.(h), mu[1] == .(details$mu), a == .(details$a), n == .(details$n)))),
              add = FALSE, color = colors[1]
     )
     ## plot remaining ROC curves
     for(i in 2:ncol(pvalues)){
-        plot.roc(pvals = pvalues[, i], sims = 1000, maxX = .1, add = TRUE, color = colors[i], line = 3)
+        plot.roc(pvals = pvalues[, i], sims = 10000, maxX = .1, add = TRUE, color = colors[i], line = 3)
     }
     ## make legend
     legend("right", inset = c(-.4, 0),lty = 1, cex = 1, bty = "n", col = colors, lwd = 3, xpd = TRUE,
@@ -104,13 +103,13 @@ for(h in sim.ids){
     details <- get(paste("results", h, sep = "."))
     details <- details$details
     ## plot initial ROC curve (p.tt)
-    plot.roc(pvals = pvalues[, 1], sims = 1000, maxX = .1, line = 3,
-             Main = bquote(expression(list(mu[1] == .(details$mu), a == .(details$a), n == .(details$n)))),
+    plot.roc(pvals = pvalues[, 1], sims = 10000, maxX = .1, line = 3,
+             Main = bquote(expression(list(.(h), mu[1] == .(details$mu), a == .(details$a), n == .(details$n)))),
              add = FALSE, color = colors[1]
     )
     ## plot remaining ROC curves
     for(i in 2:ncol(pvalues)){
-        plot.roc(pvals = pvalues[, i], sims = 1000, maxX = .1, add = TRUE, color = colors[i], line = 3)
+        plot.roc(pvals = pvalues[, i], sims = 10000, maxX = .1, add = TRUE, color = colors[i], line = 3)
     }
     ## make legend
     legend("right", inset = c(-.4, 0), lty = 1, cex = 1, bty = "n", col = colors, lwd = 3, xpd = TRUE,
