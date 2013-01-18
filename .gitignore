@@ -8,4 +8,13 @@
 # Ignore simulation directories
 betabinsim/
 negbinsim/
+
+# Ignore results directory
+results/
+
+
+*.pdf
+*.tex
+*.synctex.gz
+*.log
 .Rproj.user

@@ -35,5 +35,5 @@ for(w in 1:length(nb.sim.ids)){
 rm(list = c("aa", "w"))
 
 ## Save workspace containing all results
-save.image("~/my_research/Metagenomics/results/mgResults.RData")
+save.image("~/my_research/Metagenomics/results/myResults.RData")
 
